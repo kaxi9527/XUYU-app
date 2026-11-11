@@ -1,0 +1,40 @@
+/* REQ-EASY-07: file browsing, optional selection, and in-place actions. */
+.file-browser [hidden] { display: none; }
+.file-browser:not(.file-selecting) label.sel { display: none; }
+.file-browser .sel-bar { margin: 8px 0 16px; }
+.file-name-button { border: 0; padding: 2px 0; border-radius: 3px; background: transparent; color: inherit; text-align: left; font: inherit; cursor: pointer; min-width: 0; overflow-wrap: anywhere; }
+.file-name-button:hover { color: var(--link); text-decoration: underline; text-underline-offset: 3px; }
+.file-name-button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.file-name-button.row-name { width: 100%; font-weight: 600; }
+.file-trash-btn.btn { min-height: 32px; height: 32px; width: 32px; padding: 6px; flex-shrink: 0; color: var(--sub); }
+.file-trash-btn svg { display: block; height: 19px; width: 19px; }
+.file-trash-btn:hover, .file-trash-btn:focus-visible { color: var(--color-error); background: color-mix(in srgb,var(--color-error) 9%,var(--surface)); }
+.file-browser .row { grid-template-columns: 56px minmax(0,1fr) 150px 106px 80px 32px; grid-template-areas: 'thumb main agent place time act'; }
+.file-browser.file-selecting .row { grid-template-columns: 22px 56px minmax(0,1fr) 150px 106px 80px 32px; grid-template-areas: 'sel thumb main agent place time act'; }
+.file-browser .entry { grid-template-columns: 40px minmax(0,1fr) 32px; }
+.file-browser.file-selecting .entry { grid-template-columns: 22px 40px minmax(0,1fr) 32px; }
+.file-browser .entry-name { text-align: left; line-height: 1.5; }
+.file-browser .entry-actions { flex-wrap: nowrap; }
+.file-browser .file-card > .row-act { position: absolute; top: 8px; right: 8px; }
+.file-browser .file-card .file-trash-btn { background: var(--surface); border: 1px solid var(--line); }
+.file-browser .task-head { position: relative; padding-right: 34px; flex-wrap: wrap; }
+.file-browser .task-head > .file-trash-btn { position: absolute; top: -3px; right: -3px; }
+.file-browser .task-name-button { flex: 1; }
+.file-browser .task-actions:empty { display: none; }
+.file-browser .task-head .sel { margin-top: 4px; }
+.file-browser .side-panels h2, .file-browser .panel > h2 { margin: 0 0 10px; font-size: 15px; }
+.file-browser .entry.alias { display: block; }
+.file-browser .cols { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(280px,100%),1fr)); align-items: start; overflow: visible; }
+.file-browser .col { min-width: 0; }
+@container (max-width: 860px) {
+  .file-browser .row { grid-template-columns: 56px minmax(0,1fr) 110px 32px; grid-template-areas: 'thumb main time act' 'thumb agent place act'; }
+  .file-browser.file-selecting .row { grid-template-columns: 22px 56px minmax(0,1fr) 110px 32px; grid-template-areas: 'sel thumb main time act' 'sel thumb agent place act'; }
+  .file-browser .row-agent { grid-area: agent; }
+  .file-browser .row-place { grid-area: place; justify-self: start; }
+}
+@container (max-width: 560px) {
+  .file-browser .row { grid-template-columns: 40px minmax(0,1fr) 32px; grid-template-areas: 'thumb main act' 'thumb agent act' 'thumb place act' 'thumb time act'; gap: 5px 10px; }
+  .file-browser.file-selecting .row { grid-template-columns: 22px 40px minmax(0,1fr) 32px; grid-template-areas: 'sel thumb main act' 'sel thumb agent act' 'sel thumb place act' 'sel thumb time act'; }
+  .file-browser .row > .thumb { width: 40px; height: 36px; align-self: start; }
+  .file-browser .row-time { text-align: left; flex-direction: row; gap: 10px; }
+}

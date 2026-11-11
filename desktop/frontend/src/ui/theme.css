@@ -1,0 +1,128 @@
+/* WorkShelf UI: MDUI 2.1.5, neutral file workspace. See C-END-UI.md.
+   Existing business styles consume aliases of the same product tokens. */
+:root {
+  --mdui-color-primary-light:41,44,38; --mdui-color-on-primary-light:255,255,255;
+  --mdui-color-primary-container-light:242,236,217; --mdui-color-on-primary-container-light:83,65,31;
+  --mdui-color-secondary-light:98,103,92; --mdui-color-on-secondary-light:255,255,255;
+  --mdui-color-secondary-container-light:237,238,231; --mdui-color-on-secondary-container-light:49,54,44;
+  --mdui-color-tertiary-light:76,100,62; --mdui-color-on-tertiary-light:255,255,255;
+  --mdui-color-tertiary-container-light:227,237,217; --mdui-color-on-tertiary-container-light:41,62,29;
+  --mdui-color-error-light:165,53,43; --mdui-color-on-error-light:255,255,255;
+  --mdui-color-error-container-light:251,234,231; --mdui-color-on-error-container-light:127,36,29;
+  --mdui-color-background-light:247,247,244; --mdui-color-on-background-light:41,44,38;
+  --mdui-color-surface-light:255,255,255; --mdui-color-on-surface-light:41,44,38;
+  --mdui-color-surface-variant-light:239,240,233; --mdui-color-on-surface-variant-light:98,103,92;
+  --mdui-color-surface-container-lowest-light:255,255,255; --mdui-color-surface-container-low-light:250,250,247;
+  --mdui-color-surface-container-light:247,247,244; --mdui-color-surface-container-high-light:240,241,235;
+  --mdui-color-surface-container-highest-light:233,235,227; --mdui-color-surface-dim-light:230,232,224;
+  --mdui-color-surface-bright-light:255,255,255; --mdui-color-surface-tint-color-light:41,44,38;
+  --mdui-color-outline-light:117,123,110; --mdui-color-outline-variant-light:222,225,216;
+  --mdui-color-inverse-surface-light:41,44,38; --mdui-color-inverse-on-surface-light:247,247,244;
+  --mdui-color-inverse-primary-light:236,214,163; --mdui-color-shadow-light:0,0,0; --mdui-color-scrim-light:0,0,0;
+  --mdui-color-primary-dark:236,232,218; --mdui-color-on-primary-dark:41,44,38;
+  --mdui-color-primary-container-dark:68,59,40; --mdui-color-on-primary-container-dark:240,222,181;
+  --mdui-color-secondary-dark:197,201,188; --mdui-color-on-secondary-dark:41,44,38;
+  --mdui-color-secondary-container-dark:57,62,50; --mdui-color-on-secondary-container-dark:224,228,214;
+  --mdui-color-tertiary-dark:187,208,167; --mdui-color-on-tertiary-dark:35,53,24;
+  --mdui-color-tertiary-container-dark:55,76,42; --mdui-color-on-tertiary-container-dark:221,237,205;
+  --mdui-color-error-dark:246,180,170; --mdui-color-on-error-dark:80,25,20;
+  --mdui-color-error-container-dark:75,35,30; --mdui-color-on-error-container-dark:255,215,207;
+  --mdui-color-background-dark:26,28,24; --mdui-color-on-background-dark:235,237,228;
+  --mdui-color-surface-dark:34,37,31; --mdui-color-on-surface-dark:235,237,228;
+  --mdui-color-surface-variant-dark:54,58,49; --mdui-color-on-surface-variant-dark:185,191,176;
+  --mdui-color-surface-container-lowest-dark:23,25,21; --mdui-color-surface-container-low-dark:30,32,27;
+  --mdui-color-surface-container-dark:34,37,31; --mdui-color-surface-container-high-dark:43,46,39;
+  --mdui-color-surface-container-highest-dark:52,56,47; --mdui-color-surface-dim-dark:26,28,24;
+  --mdui-color-surface-bright-dark:52,56,47; --mdui-color-surface-tint-color-dark:236,232,218;
+  --mdui-color-outline-dark:147,153,138; --mdui-color-outline-variant-dark:65,70,59;
+  --mdui-color-inverse-surface-dark:235,237,228; --mdui-color-inverse-on-surface-dark:41,44,38;
+  --mdui-color-inverse-primary-dark:83,65,31; --mdui-color-shadow-dark:0,0,0; --mdui-color-scrim-dark:0,0,0;
+  --mdui-typescale-label-large-tracking:0;
+  --bg:rgb(var(--mdui-color-background)); --surface:rgb(var(--mdui-color-surface)); --side:var(--bg);
+  --text:rgb(var(--mdui-color-on-surface)); --sub:rgb(var(--mdui-color-on-surface-variant)); --faint:var(--sub);
+  --line:rgb(var(--mdui-color-outline-variant)); --line2:rgb(var(--mdui-color-surface-container-high));
+  --hover:rgb(var(--mdui-color-surface-container-high)); --accent:rgb(var(--mdui-color-primary));
+  --accent-ink:rgb(var(--mdui-color-on-primary)); --link:var(--text); --focus:rgb(var(--mdui-color-tertiary));
+  --primary-bg:var(--accent); --primary-ink:var(--accent-ink);
+  --folder:#e8ba55; --selection:rgb(var(--mdui-color-primary-container)); --selection-ink:rgb(var(--mdui-color-on-primary-container));
+  --color-primary:var(--accent); --color-primary-content:var(--accent-ink); --color-base-100:var(--surface);
+  --color-base-200:var(--bg); --color-base-300:var(--line); --color-base-content:var(--text);
+  --color-success:rgb(var(--mdui-color-tertiary)); --color-error:rgb(var(--mdui-color-error));
+  --color-warning:var(--selection-ink); --color-info:var(--sub);
+  --ok-bg:rgb(var(--mdui-color-tertiary-container)); --ok:rgb(var(--mdui-color-on-tertiary-container));
+  --warn-bg:var(--selection); --warn:var(--selection-ink); --bad-bg:rgb(var(--mdui-color-error-container)); --bad:rgb(var(--mdui-color-on-error-container));
+  --info-bg:var(--hover); --info:var(--sub); --mute-bg:var(--hover); --mute:var(--sub);
+  --tag-bg:var(--hover); --tag:var(--sub); --thumb-bg:var(--hover);
+  --radius-field:9px; --radius-selector:6px; --radius-box:12px; --radius-sm:8px;
+  --shadow-sm:none; --shadow:0 12px 40px rgb(0 0 0 / .15);
+}
+body {font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Microsoft YaHei",sans-serif;font-size:14px;line-height:1.55;color:var(--text);background:var(--bg)}
+h1,h2,h3 {letter-spacing:-.025em}
+a {color:var(--link)}
+.side {width:204px;flex-basis:204px;padding:36px 14px 18px;background:var(--side);border-right:1px solid var(--line)}
+.side .logo {display:flex;align-items:center;gap:10px;padding:7px 8px 32px;font-size:18px;letter-spacing:-.6px}
+.side .logo::before {display:none}
+.brand-mark {position:relative;width:42px;height:34px;flex-shrink:0;overflow:hidden;background:#fbf4e9;border-radius:8px}
+.brand-mark img {position:absolute;left:50%;top:50%;width:64px;height:64px;max-width:none;transform:translate(-50%,-50%)}
+.brand-latin {font-size:11px;letter-spacing:.07em;color:var(--sub);font-weight:600}
+.side .logo small {display:block;color:var(--sub);font-size:10px;font-weight:400;letter-spacing:.02em;margin-top:2px}
+.side a {display:flex;align-items:center;gap:11px;min-height:42px;border-radius:9px;padding:10px 12px;margin:3px 0;font-size:14px;font-weight:500;white-space:nowrap}
+.side a svg {width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.side a.on {background:var(--selection);color:var(--selection-ink);font-weight:600;box-shadow:none;border-color:transparent}
+.side-tools {display:block;margin-top:26px;border:0}
+.side-tools>summary {padding:8px 12px;cursor:pointer;font-size:12px;color:var(--sub)}
+.side-tools a {display:flex;width:100%;padding-left:18px;font-size:13px;min-height:36px}
+.side-settings {margin-top:auto!important}.side-foot {border-top:1px solid var(--line);margin-top:10px;padding:12px 10px 0;font-size:11px}
+.view {padding:30px 32px 40px;background:var(--bg)}
+#access-banner:not([hidden]) {padding:11px 32px;background:var(--selection);color:var(--selection-ink);font-size:13px;line-height:1.6}
+#access-banner a {color:inherit;font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.bar {margin-bottom:18px;gap:12px}.bar h1 {font-size:25px;line-height:1.3;font-weight:650;max-width:100%}
+.bar .sub {margin:5px 0 0}.bar .page-primary {margin-left:auto}
+.lead {font-size:14px;line-height:1.7;color:var(--sub)}
+.sec {margin-top:28px}.sec h2,.sec-head h2 {font-size:16px;font-weight:600}.sec>.sub {font-size:12px}
+.project-list>.sel-bar {margin:0 0 8px}.project-list>.sel-bar+.sec {margin-top:12px}.project-scan-details {font-size:12px;color:var(--sub);margin:-4px 0 14px}.project-scan-details summary {cursor:pointer}
+.grid {grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.card {border:1px solid var(--line);border-radius:12px;background:var(--surface);box-shadow:none}
+.card:hover {border-color:rgb(var(--mdui-color-outline));box-shadow:none}
+.project-card-main {min-height:158px;padding:18px;gap:9px}.project-card-main .card-title {font-size:16px;line-height:1.45;font-weight:600}
+.project-folder {width:34px;height:28px;display:block;color:var(--folder);margin-bottom:5px}
+.card-meta,.card-path {font-size:12px;color:var(--sub)}.project-card .tags {gap:5px}.project-card .chip,.project-card .tag {font-size:11px;padding:2px 6px}
+.tags {display:flex;flex-wrap:wrap;gap:6px}.chip,.tag,.badge {display:inline-flex;align-items:center;border-radius:5px;padding:2px 7px;font-size:12px;line-height:1.5;background:var(--mute-bg);color:var(--mute)}
+.chip.info {background:var(--info-bg);color:var(--info)}.chip.warn {background:var(--warn-bg);color:var(--warn)}.chip.bad {background:var(--bad-bg);color:var(--bad)}
+mdui-button {--shape-corner:8px;height:36px;vertical-align:middle;font-size:13px;letter-spacing:0;max-width:100%;flex-shrink:0}
+mdui-button::part(button) {font:inherit;letter-spacing:0;line-height:1.4;padding-inline:13px}
+mdui-button.btn-sm {height:32px;font-size:12px}mdui-button.btn-md {height:40px;font-size:14px}
+mdui-button.btn-primary::part(button) {background:var(--primary-bg);color:var(--primary-ink)}
+mdui-button.btn-error::part(button) {background:var(--bad-bg);color:var(--bad)}
+mdui-button.btn-ghost::part(button) {background:transparent;color:var(--text)}
+mdui-button.btn-square {height:32px;width:32px}mdui-button.btn-square::part(button) {padding:6px}
+mdui-button[disabled] {opacity:.5}mdui-button[hidden],[hidden] {display:none!important}
+mdui-button:focus-visible {outline:2px solid var(--focus);outline-offset:3px}
+.input,.select,.textarea {font:inherit;color:var(--text);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:9px 11px;min-height:38px;max-width:100%;box-sizing:border-box}
+.input-sm,.select-sm {min-height:34px;font-size:13px;padding:6px 10px}.textarea {width:100%;resize:vertical;line-height:1.6}
+.input:focus,.select:focus,.textarea:focus {border-color:var(--focus);outline:2px solid color-mix(in srgb,var(--focus) 20%,transparent);outline-offset:1px}
+input[type=checkbox],input[type=radio] {accent-color:var(--accent);width:16px;height:16px;vertical-align:middle;flex-shrink:0}
+input:disabled,select:disabled,textarea:disabled {opacity:.55}
+.table {width:100%;border-collapse:collapse;text-align:left}.table th {font-size:12px;font-weight:500;color:var(--sub);background:var(--bg)}
+.table th,.table td {padding:11px 14px;border-bottom:1px solid var(--line)}.table tr:hover {background:var(--hover)}
+.panel {border:1px solid var(--line);border-radius:12px;box-shadow:none;background:var(--surface)}
+.work-view-nav a,.work-view-nav>span {border-radius:6px;font-size:13px}
+.work-view-nav [aria-current=page] {background:var(--selection);color:var(--selection-ink)}
+.organizer {max-width:1040px}.organize-heading h1 {font-size:25px;line-height:1.4;font-weight:650}
+.organize-heading p {font-size:14px;max-width:650px;color:var(--sub)}.organize-steps {font-size:12px;gap:24px}
+.organize-steps [aria-current=step] {color:var(--text);font-weight:650}
+.organize-section {padding:22px;border:1px solid var(--line);border-radius:12px;margin-bottom:18px;background:var(--surface)}
+.organizer h2 {font-size:16px}.organize-section .sub {font-size:12px;line-height:1.65}
+.organize-directory {padding-block:6px}.organize-directory .btn {justify-self:end}
+.organize-hidden-toggle .toggle {flex-shrink:0}.organize-hidden-label {background:var(--hover);border-radius:5px;padding:1px 6px}
+.organize-name-link {height:auto;min-height:24px;white-space:normal}.organize-name-link::part(button) {padding:0;justify-content:flex-start;text-align:left}
+.organize-preview-action {border:0;padding:4px 0 10px}.organize-table-wrap {background:var(--surface);border-radius:12px}
+.modal-box {border-radius:14px;border:1px solid var(--line);color:var(--text);background:var(--surface)}.modal-btns {gap:10px}
+.shelf-dialog {--shape-corner:14px;--z-index:1000}.shelf-dialog::part(panel) {width:min(560px,calc(100vw - 40px));max-height:calc(100vh - 48px);background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow)}
+.shelf-dialog::part(headline) {font-size:20px;line-height:1.45}.shelf-dialog::part(body) {font-size:14px;line-height:1.7}
+.shelf-dialog>[slot=headline] {font-size:20px;font-weight:650;line-height:1.45;margin:0}.shelf-dialog .modal-box>p:first-child {margin-top:0}
+.shelf-dialog .modal-box {border:0;padding:0;border-radius:0;max-width:100%;max-height:none;width:auto;box-shadow:none}
+.shelf-dialog .modal-btns {display:flex;flex-wrap:wrap;margin:0;padding:0;justify-content:flex-end}
+.organize-delete-warning {border-radius:8px}.organize-save .btn {flex-shrink:0}
+@media(max-width:960px){.side{width:184px;flex-basis:184px;padding-inline:12px}.view{padding:24px}.grid{grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}.organize-section{padding:18px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}

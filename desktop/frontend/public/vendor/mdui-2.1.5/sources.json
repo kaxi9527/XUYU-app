@@ -1,0 +1,30 @@
+{
+  "name": "mdui",
+  "version": "2.1.5",
+  "license": "MIT",
+  "url": "https://registry.npmjs.org/mdui/-/mdui-2.1.5.tgz",
+  "integrity": "sha512-uvXy/IFu/K93lAswsbKNj2Dn7Aab0LjWgdnfyIM/RQL0BhDe6Y9ChbN0x/Ts1W03nJtcef3wb1Fp44q8L9zmiQ==",
+  "method": "official standalone distribution; no installation",
+  "files": [
+    {
+      "file": "mdui.global.js",
+      "bytes": 362818,
+      "sha256": "3c7d103eedf6ba0f2ff8304258d2becd66cbb3a2bafc5f41a2004ac0e5801fef"
+    },
+    {
+      "file": "mdui.css",
+      "bytes": 22776,
+      "sha256": "6ec44497a312b98164ba82fdbc445268f68e44147cb3a7730d53ac83e1ce20d6"
+    },
+    {
+      "file": "LICENSE",
+      "bytes": 1093,
+      "sha256": "a0f97626c2fd0dbe659289693571b527c0b2363981478911babc38cc9b28c62e"
+    },
+    {
+      "file": "package.json",
+      "bytes": 1526,
+      "sha256": "739c0988859e729e41559f85c98f5d5b4d9f11ffe88d0f435dcad339c9f3a3c3"
+    }
+  ]
+}

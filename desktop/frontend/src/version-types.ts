@@ -1,0 +1,21 @@
+export type API = <T>(method: string, ...args: unknown[]) => Promise<T>;
+export type Receipt = {operationID:string;revision:number;entityIDs:string[]};
+export type Work = {id:string;title:string;currentUsableVersionID?:string};
+export type WorkCard = Work & {versions:number;usable:boolean;usableState:string};
+export type WorkList = {revision:number;total:number;offset:number;limit:number;items:WorkCard[]};
+export type Source = {kind:string;binding?:string;tool?:string;agent?:string;recorder?:string;task?:string;source?:string;parameters?:string;claimedAt?:string;recordedAt:string};
+export type Version = {
+    version:{id:string;workID:string;role:string;registeredAt:string;content:{size:number;sha256:string}};
+    locations:{location:{path:string};state:string;reason?:string}[];
+    state:string;usable:boolean;recordedUsable:boolean;provenance:Source[];
+    confirmations:{confirmedAt:string}[];
+};
+export type History = {work:Work;revision:number;total:number;offset:number;limit:number;items:Version[];relations:{versionID:string;parentVersionID:string;kind:string}[]};
+export type Preview = {token:string;revision:number;notice:string;warnings:string[];title:string;items:{path:string}[]};
+export type Action = {kind:string;projectKey:string;operationID:string;revision?:number;token?:string;workID?:string;versionID?:string;parentVersionID?:string;versionIDs?:string[];title?:string;note?:Record<string,string>};
+export type ActionResult = {receipt?:Receipt;error?:string;uncertain:boolean};
+export type Entry = {name:string;path:string;directory:boolean;hidden:boolean;link:boolean};
+export type Listing = {path:string;parent:string;entries:Entry[];hiddenCount:number;truncated:boolean};
+export const roles:Record<string,string> = {source:'源文件',draft:'草稿',export:'导出件',delivery:'交付件'};
+export const states:Record<string,string> = {available:'内容可读取',not_confirmed:'还未选可用版',changed:'原文件已改写',missing:'原位置找不到',restricted:'位置不在允许范围',unreadable:'暂时无法读取',unchecked:'内容尚未核对'};
+export const basename = (path:string) => path.split(/[\\/]/).pop() || path;

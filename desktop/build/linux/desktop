@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Name=WorkShelf
+Comment=WorkShelf 文件归位与 AI 动态
+# The Exec line includes %u to pass the URL to the application
+Exec=/usr/local/bin/WorkShelf %u
+Terminal=false
+Type=Application
+Icon=WorkShelf
+Categories=Utility;
+StartupWMClass=WorkShelf
+
+ 
