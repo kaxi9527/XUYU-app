@@ -1,0 +1,111 @@
+name: Build and test
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {runner: macos-15, platform: macos, arch: arm64}
+          - {runner: macos-15-intel, platform: macos, arch: amd64}
+          - {runner: ubuntu-24.04, platform: linux, arch: amd64}
+          - {runner: ubuntu-24.04-arm, platform: linux, arch: arm64}
+          - {runner: windows-latest, platform: windows, arch: amd64}
+          - {runner: windows-11-arm, platform: windows, arch: arm64}
+    runs-on: ${{ matrix.runner }}
+    env:
+      GOMAXPROCS: 2
+      GOTOOLCHAIN: local
+      GOFLAGS: -mod=readonly
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26.10'
+          cache-dependency-path: |
+            desktop/go.sum
+            desktop/model-core/go.sum
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: desktop/frontend/package-lock.json
+      - name: Install Linux desktop dependencies
+        if: matrix.platform == 'linux'
+        run: sudo apt-get update -qq && sudo apt-get install -y libgtk-4-dev libwebkitgtk-6.0-dev pkg-config xvfb
+      - name: Build frontend
+        working-directory: desktop/frontend
+        run: npm ci && npm run typecheck && npm run test:ui && npm run build
+      - name: Test file moves
+        run: go test -p 1 -count=1 -run 'TestExclusiveMoveNeverClobbers|TestExactJournalFailureDoesNotMove|TestExactPublishesUndoBeforeMoving' ./internal/home
+      - name: Build desktop and model runtime
+        shell: bash
+        env:
+          GOARCH: ${{ matrix.arch }}
+        run: |
+          mkdir -p release-stage/tools release
+          suffix=''
+          if [ '${{ matrix.platform }}' = windows ]; then suffix='.exe'; fi
+          (cd desktop/model-core && go build -p 1 -trimpath -buildvcs=false -o "../../release-stage/workshelf-model-core${suffix}" ./cmd/workshelf-core)
+          go build -p 1 -trimpath -buildvcs=false -o "release-stage/tools/workshelf${suffix}" ./cmd/workshelf
+          (cd desktop && go build -p 1 -trimpath -buildvcs=false -tags production -o "../release-stage/WorkShelf${suffix}" .)
+          cp LICENSE THIRD_PARTY_NOTICES.md README.md README.en.md release-stage/
+          mkdir -p release-stage/docs
+          cp docs/INSTALL.md release-stage/docs/
+      - name: Package macOS
+        if: matrix.platform == 'macos'
+        shell: bash
+        run: |
+          app=release-stage/WorkShelf.app
+          mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
+          mv release-stage/WorkShelf "$app/Contents/MacOS/WorkShelf"
+          mv release-stage/workshelf-model-core "$app/Contents/Resources/workshelf-model-core"
+          cp release-stage/tools/workshelf "$app/Contents/Resources/workshelf"
+          cp desktop/build/darwin/icons.icns "$app/Contents/Resources/"
+          cp desktop/model-core/LICENSE "$app/Contents/Resources/model-core-LICENSE"
+          cp desktop/model-core/NOTICE.md "$app/Contents/Resources/model-core-NOTICE.md"
+          cp desktop/build/darwin/Info.plist "$app/Contents/Info.plist"
+          plutil -replace CFBundleName -string '序屿 XUYU' "$app/Contents/Info.plist"
+          plutil -insert CFBundleDisplayName -string '序屿 XUYU' "$app/Contents/Info.plist"
+          plutil -remove CFBundleIconName "$app/Contents/Info.plist"
+          codesign --force --deep --options runtime --sign - "$app"
+          codesign --verify --deep --strict "$app"
+          ditto -c -k --sequesterRsrc --keepParent release-stage "release/XUYU-macos-${{ matrix.arch }}.zip"
+      - name: Package Linux
+        if: matrix.platform == 'linux'
+        run: tar -czf release/XUYU-linux-${{ matrix.arch }}.tar.gz -C release-stage .
+      - name: Package Windows
+        if: matrix.platform == 'windows'
+        shell: pwsh
+        run: Compress-Archive -Path release-stage/* -DestinationPath release/XUYU-windows-${{ matrix.arch }}.zip
+      - name: Start application with isolated data
+        shell: bash
+        run: |
+          if [ '${{ matrix.platform }}' = windows ]; then
+            python scripts/smoke-release.py release-stage/WorkShelf.exe
+          elif [ '${{ matrix.platform }}' = linux ]; then
+            xvfb-run -a python3 scripts/smoke-release.py release-stage/WorkShelf
+          else
+            python3 scripts/smoke-release.py release-stage/WorkShelf.app/Contents/MacOS/WorkShelf
+          fi
+      - name: Check packaged contents for private data
+        shell: bash
+        run: |
+          if [ '${{ matrix.platform }}' = windows ]; then
+            python scripts/check-release-contents.py release-stage
+          else
+            python3 scripts/check-release-contents.py release-stage
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: XUYU-${{ matrix.platform }}-${{ matrix.arch }}
+          path: release/*
+          if-no-files-found: error
