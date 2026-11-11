@@ -20,7 +20,7 @@ export function mountWelcome(view:HTMLElement,api:API,esc:Escape){
    const button=view.querySelector<HTMLButtonElement>('#access-check')!,result=view.querySelector<HTMLElement>('#access-result')!;
    button.disabled=true;result.textContent='正在检查，系统可能会询问访问权限……';
    try{const folders=await checkAccess(api);if(!result.isConnected)return;
-    result.innerHTML=`<p>${folders.map(f=>`${esc(f.name)}：${esc(f.status)}`).join('　')}</p>${folders.some(f=>f.status==='无法访问')?'<p>如已拒绝，请在 macOS「系统设置 → 隐私与安全性 → 文件与文件夹」中允许 序屿，然后返回重新检查。</p>':''}<mdui-button id="access-continue" class="btn btn-primary" variant="filled">继续</mdui-button>`;
+    result.innerHTML=`<p>${folders.map(f=>`${esc(f.name)}：${esc(f.status)}`).join('　')}</p>${folders.some(f=>f.status==='无法访问')?'<p>请在系统设置中检查序屿的文件夹访问权限，然后返回重新检查。</p>':''}<mdui-button id="access-continue" class="btn btn-primary" variant="filled">继续</mdui-button>`;
     result.querySelector('#access-continue')!.addEventListener('click',finish);
    }catch(e){if(result.isConnected)result.textContent=`检查失败：${esc(e instanceof Error?e.message:String(e))}。可以稍后在设置中重试。`;}
    finally{if(button.isConnected){button.disabled=false;button.textContent='重新检查';}}
