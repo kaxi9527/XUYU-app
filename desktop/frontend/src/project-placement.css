@@ -1,0 +1,13 @@
+.project-placement { max-width: 1160px; margin: 0 auto; }
+.placement-entry { display: inline-block; color: var(--text); padding: 10px 16px; background: var(--hover); border: 1px solid var(--line); border-radius: 6px; font-weight: 600; }
+.project-placement > .bar { justify-content: flex-start; gap: 20px; }
+.placement-feedback { min-height: 24px; color: var(--sub); font-size: 13px; }
+.project-placement .structure-workspace { height: clamp(200px,calc(100dvh - 450px),600px); }
+.placement-actions { display: flex; align-items: center; justify-content: flex-end; gap: 12px; flex-wrap: wrap; padding: 18px 0; }
+.placement-actions a { color: var(--text); font-size: 13px; }
+.placement-notice { padding: 12px 16px; background: var(--hover); border-left: 3px solid var(--sub); font-size: 13px; line-height: 1.7; overflow-wrap: anywhere; }
+.placement-result-file { flex: 1; min-width: 0; padding: 10px 0; }
+.placement-result-file summary { display: flex; justify-content: space-between; gap: 16px; cursor: pointer; font-size: 13px; }
+.placement-result-file summary strong { overflow-wrap: anywhere; }
+.placement-result-file summary span { color: var(--sub); flex-shrink: 0; }
+.placement-result-file p { font-size: 12px; color: var(--sub); overflow-wrap: anywhere; }

@@ -1,0 +1,17 @@
+{
+	"fixed": {
+		"file_version": "0.2.0",
+		"product_version": "0.2.0"
+	},
+	"info": {
+		"0409": {
+			"FileVersion": "0.2.0",
+			"ProductVersion": "0.2.0",
+			"CompanyName": "kaxi9527",
+			"FileDescription": "WorkShelf 文件归位与 AI 动态",
+			"LegalCopyright": "(c) 2026, kaxi9527",
+			"ProductName": "WorkShelf",
+			"Comments": "WorkShelf desktop"
+		}
+	}
+}

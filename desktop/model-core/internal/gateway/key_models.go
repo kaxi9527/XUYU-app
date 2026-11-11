@@ -1,0 +1,535 @@
+package gateway
+
+import (
+	"cmp"
+	"context"
+	"fmt"
+	"net/http"
+	"slices"
+	"strings"
+
+	"github.com/yetone/magpie/internal/access"
+	"github.com/yetone/magpie/internal/provider"
+)
+
+// A gateway key may be held to some models (#882, access.Key.Models): it
+// is shown only those in the model lists, and a request of it for another
+// is refused before any provider is asked. A model is held to by its
+// provider's id and its own, "<provider>/<model>", whatever the agent
+// called it. A routing group passes when the key names it, "group/<id>"
+// (or "group/*", every group), a group magpie found by its auto/<model>
+// too, either id passing for the other (allows), and then every member of
+// it does, through it. A group of the user's own the key doesn't name is
+// never the key's, however few models it has and all of them the key's
+// (kautism on Discord: a key given gemini 3.8 was shown, and could use, a
+// group the user made of gemini 3.8 alone, a group never handed out); a
+// group magpie found, one model several providers serve, passes when
+// every model in it does, as it is that model.
+
+// magpieChoseKey marks, in a request's context, a call magpie makes for a
+// model the user picked in its settings rather than the caller (a web
+// search's, an image description's, a Codex title's): the key's models
+// don't hold it.
+type magpieChoseKey struct{}
+
+func magpieChose(ctx context.Context) context.Context {
+	return context.WithValue(ctx, magpieChoseKey{}, true)
+}
+
+// keyHolds is the calling key's models, when they hold this request.
+func keyHolds(r *http.Request) (access.Identity, bool) {
+	who := access.Caller(r.Context())
+	if !who.Restricted() {
+		return who, false
+	}
+	if chose, _ := r.Context().Value(magpieChoseKey{}).(bool); chose {
+		return who, false
+	}
+	return who, true
+}
+
+// accountHolds is the calling key's accounts, when they hold this
+// request: magpie's own calls for the key — a web search, a picture
+// described, a Codex title — are of the models the user picked, so the
+// models don't hold them, but their spend lands on an account or key all
+// the same, and the accounts hold them too.
+func accountHolds(r *http.Request) (access.Identity, bool) {
+	who := access.Caller(r.Context())
+	return who, len(who.Accounts) > 0
+}
+
+// allows is who.Allows, a found group named by either of its ids: a key
+// held to auto/<model> (as the model lists give it, any spelling of the
+// model) may use group/auto-<slug>, the id the gateway routes it by, and
+// one held to group/auto-<slug> or group/* the auto/<model> an agent asks
+// for, which the gateway takes back to that id (validateModel). A pattern
+// of auto/ ids ("auto/*") holds to the groups' auto/<model>.
+func allows(who access.Identity, ids ...string) bool {
+	if who.Allows(ids...) {
+		return true
+	}
+	for _, id := range ids {
+		if !strings.HasPrefix(id, provider.GroupPrefix+"auto-") {
+			continue
+		}
+		if pub := provider.PublicRef(id); pub != id && who.Allows(pub) {
+			return true
+		}
+		for _, p := range who.Models {
+			if !strings.Contains(p, "*") && strings.HasPrefix(p, provider.AutoPrefix) && strings.EqualFold(provider.CanonicalRef(p), id) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+// modelAllowed says the key may use provider p's model. A model the user lists by an id of their own (provider.SetModelID) is
+// the one model by either id, so a key held to one may use the other:
+// one written before the id was given, or an agent's old ref to the
+// provider's own id.
+func modelAllowed(who access.Identity, p provider.Provider, model string) bool {
+	if allows(who, p.ID+"/"+model) {
+		return true
+	}
+	if own := p.OwnModelID(model); own != model {
+		return allows(who, p.ID+"/"+own)
+	}
+	if local := p.ListedModelID(model); local != model {
+		return allows(who, p.ID+"/"+local)
+	}
+	return false
+}
+
+// memberAllowed says the key may use a routing group's member: the model,
+// or a group it is reached through that the key names.
+func memberAllowed(who access.Identity, m provider.Member) bool {
+	return modelAllowed(who, m.Provider, m.Model) || len(m.Path) > 0 && allows(who, m.Path...)
+}
+
+// groupNamed says the key names the routing group g itself.
+func groupNamed(who access.Identity, g provider.Group) bool {
+	return g.ID != "" && (allows(who, provider.GroupPrefix+g.ID) || who.Allows(g.Ref()))
+}
+
+// groupAllowed says the key may use the routing group g: it names it, or
+// g is a group magpie found (foundGroup) and the key may use every member
+// of it. A group of the user's own that a key listing models doesn't name
+// is not its, every member its or not: what the key lists is what it was
+// given (kautism). A key that names accounts and no model was given every
+// model of their providers (access.HeldModels, Linka), and a group of
+// those alone is one of them, as before.
+// Every route asks this: the model lists (entryAllowed), a request on
+// each API, count_tokens, embeddings, images, videos, the decision
+// groups, a subagent's and masking's route.
+func groupAllowed(who access.Identity, g provider.Group, ms []provider.Member) bool {
+	return groupNamed(who, g) || (foundGroup(g) || who.AccountModels) && membersAllowed(who, ms)
+}
+
+// foundGroup says g is a group magpie found (one model several providers
+// serve, auto/<model>), the user's changes to it kept or not.
+func foundGroup(g provider.Group) bool {
+	return g.Auto || strings.HasPrefix(g.ID, "auto-")
+}
+
+// keyGroupFor is provider.GroupFor for the request's gateway key: a bare
+// name that is a routing group of the user's the key may not use, and a
+// model it may use, is that model for the key, as it would be were there
+// no such group — the key is held away from the group, not from the model
+// (a group the user named gemini-3.8, a key given google/gemini-3.8
+// asking for gemini-3.8). Every other name is GroupFor's.
+func keyGroupFor(r *http.Request, id string) (string, bool) {
+	gid, ok := provider.GroupFor(id)
+	if !ok {
+		return gid, ok
+	}
+	who, held := keyHolds(r)
+	if !held {
+		return gid, true
+	}
+	if g, ms, found := provider.FindGroup(gid); !found || groupAllowed(who, g, ms) {
+		return gid, true
+	}
+	if p, model, served := provider.Resolve(id); served && !provider.IsGroupRef(id) && modelAllowed(who, p, model) {
+		return "", false
+	}
+	return gid, true
+}
+
+// groupKeeps is the members of g a request through it may go to for the
+// key: every one when it names g, else those it may use.
+func groupKeeps(who access.Identity, g provider.Group, ms []provider.Member) map[string]bool {
+	out := map[string]bool{}
+	named := groupNamed(who, g)
+	for _, m := range ms {
+		if named || memberAllowed(who, m) {
+			out[m.Provider.ID+"/"+m.Model] = true
+		}
+	}
+	return out
+}
+
+// membersAllowed says the key may use every member of a routing group:
+// one it may use only some of is the key's no more than an empty one.
+func membersAllowed(who access.Identity, ms []provider.Member) bool {
+	if len(ms) == 0 {
+		return !who.Restricted()
+	}
+	for _, m := range ms {
+		if !memberAllowed(who, m) {
+			return false
+		}
+	}
+	return true
+}
+
+// keyList weighs a model list's entries for one request's key (#1762):
+// the routing groups are read once for the list, not once an entry —
+// each read is every provider's models, its files stat'ed again, and a
+// list of 1,000 models with 500 groups took seconds — and each
+// provider's accounts and keys once, not once a model. Nothing is kept
+// past the request, so the next sees a group, account or key's models
+// changed, as before.
+type keyList struct {
+	who  access.Identity
+	find func(string) (provider.Group, []provider.Member, bool)
+	refs map[string][]provider.AccountRef
+}
+
+func newKeyList(who access.Identity) *keyList {
+	return &keyList{who: who, find: provider.GroupFinder(), refs: map[string][]provider.AccountRef{}}
+}
+
+// entryAllowed says the key is shown a model of the catalog — and some
+// account or key it may use serves it (#905): one the provider's
+// accounts are set not to serve (#474) is none of the key's.
+func (k *keyList) entryAllowed(e provider.Entry) bool {
+	who := k.who
+	if !who.Restricted() {
+		return true
+	}
+	if e.Group != "" {
+		g, ms, ok := k.find(e.ID)
+		if !ok || !groupAllowed(who, g, ms) {
+			return false
+		}
+		for _, m := range ms {
+			if k.accountServes(m.Provider, m.Model) {
+				return true
+			}
+		}
+		return false
+	}
+	if !modelAllowed(who, e.Provider, e.Model) {
+		return false
+	}
+	return k.accountServes(e.Provider, e.Model)
+}
+
+// accountServes is accountServes with p's accounts and keys read once
+// for the list.
+func (k *keyList) accountServes(p provider.Provider, model string) bool {
+	if len(k.who.Accounts) == 0 {
+		return true
+	}
+	refs, ok := k.refs[p.ID]
+	if !ok {
+		refs = p.AccountIDs()
+		k.refs[p.ID] = refs
+	}
+	return accountServesOn(k.who, p, model, refs)
+}
+
+// accountServes says some account or key the key may use serves the provider's
+// model: an account of several set to serve other models only (#474) is
+// one the key may use, and none of the key's.
+func accountServes(who access.Identity, p provider.Provider, model string) bool {
+	if len(who.Accounts) == 0 {
+		return true
+	}
+	return accountServesOn(who, p, model, p.AccountIDs())
+}
+
+// accountServesOn is accountServes over refs, p's accounts and keys.
+func accountServesOn(who access.Identity, p provider.Provider, model string, refs []provider.AccountRef) bool {
+	if len(refs) == 0 {
+		// a provider with no account and no key (a local ollama): the
+		// list holds a key to some accounts of the providers it names
+		// (AllowsAccount's rule), so one it names none of serves as it
+		// always did; one it names — an entry kept after its last account
+		// or key went — serves none, holding the key closer
+		return who.AllowsAccount(p.ID, "")
+	}
+	for _, r := range refs {
+		if !who.AllowsAccount(p.ID, r.ID) {
+			continue
+		}
+		ref := r.User
+		if r.Key {
+			ref = r.ID // a key's own list is keyed by its fingerprint
+		}
+		if p.AccountServes(ref, model) {
+			return true
+		}
+	}
+	return false
+}
+
+// keyAllowed filters the catalog to what the calling key may use.
+func keyAllowed(r *http.Request, es []provider.Entry) []provider.Entry {
+	who, held := keyHolds(r)
+	if !held {
+		return es
+	}
+	k := newKeyList(who)
+	out := make([]provider.Entry, 0, len(es))
+	for _, e := range es {
+		if k.entryAllowed(e) {
+			out = append(out, e)
+		}
+	}
+	return out
+}
+
+// allowedCandidates leaves out of a plan the providers' models the key
+// may not use — a model's fallbacks are other models — and the accounts
+// and keys it may not either, through a named group too: naming a group
+// is not naming its accounts. The plan's order keeps step with what is
+// left, and an account the key may not use is said on the plan's left,
+// held. members are the group's the key may go to through it
+// (groupKeeps), nil for a model. held says every candidate was an
+// account or key the key may not use.
+func allowedCandidates(who access.Identity, cs []candidate, pl planned, members map[string]bool) ([]candidate, planned, bool) {
+	out := cs[:0:0]
+	order := pl.order[:0:0]
+	held := false
+	for i, c := range cs {
+		if !members[c.p.ID+"/"+c.model] && !modelAllowed(who, c.p, c.model) {
+			continue // a model the key may not use: skipped, as before
+		}
+		if !accountAllowed(who, c) {
+			held = true
+			if i < len(pl.order) {
+				w := pl.order[i]
+				w.Held, w.HeldBy = true, who.Group
+				pl.left = append(pl.left, w)
+			}
+			continue
+		}
+		out = append(out, c)
+		if i < len(pl.order) {
+			order = append(order, pl.order[i])
+		}
+	}
+	pl.order = order
+	// nor is one held for its credits there for a reset to bring back, or
+	// one past its cap for a conversation kept strictly on it
+	gone := func(c candidate) bool {
+		return !members[c.p.ID+"/"+c.model] && !modelAllowed(who, c.p, c.model) || !accountAllowed(who, c)
+	}
+	pl.held = slices.DeleteFunc(slices.Clone(pl.held), gone)
+	pl.capped = slices.DeleteFunc(slices.Clone(pl.capped), gone)
+	// nor one whose own list lacks the model, asked once those that list
+	// it refused the model (unlistedNext)
+	var unlisted []candidate
+	var unlistedW []Weighed
+	for i, c := range pl.unlisted {
+		if !gone(c) {
+			unlisted, unlistedW = append(unlisted, c), append(unlistedW, pl.unlistedW[i])
+		}
+	}
+	pl.unlisted, pl.unlistedW = unlisted, unlistedW
+	return out, pl, held && len(out) == 0
+}
+
+// accountAllowed says the key may use a candidate's account or key: a
+// signed-in account by its stable id, kept through renames, a key by its
+// fingerprint — "<provider>/<ref>", told apart in lower case, as
+// accounts are. A key that lists none uses every account, as keys
+// always did.
+func accountAllowed(who access.Identity, c candidate) bool {
+	if len(who.Accounts) == 0 {
+		return true
+	}
+	return who.AllowsAccount(c.p.ID, c.p.AccountID())
+}
+
+// heldByGroup is r with its caller held to the routing group g's own
+// accounts too (Group.Accounts, duanckham on X): a request through the
+// group is held to them by everything that holds one to its gateway key's
+// accounts (accountHolds, accountAllowed, onKeys, allowedKey), on every
+// route, as one rule (access.HeldToGroup). A group with none is r.
+func heldByGroup(r *http.Request, g provider.Group) *http.Request {
+	if len(g.Accounts) == 0 {
+		return r
+	}
+	who := access.Caller(r.Context()).HeldToGroup(cmp.Or(g.Name, g.ID), g.Accounts)
+	return r.WithContext(access.WithIdentity(r.Context(), who))
+}
+
+// heldByGroupAt is heldByGroup for the routing group id names, as a
+// request may name one (a bare group's name, auto/<model>); r when it
+// names none.
+func heldByGroupAt(r *http.Request, id string) *http.Request {
+	if gid, ok := provider.GroupFor(id); ok {
+		id = gid
+	}
+	if sid, ok := provider.AutoStandIn(id); ok {
+		id = sid
+	}
+	if g, _, ok := provider.FindGroup(id); ok {
+		return heldByGroup(r, g)
+	}
+	return r
+}
+
+// groupHeld is the name of the first of gs, routing groups a candidate is
+// reached through, held to accounts (Group.Accounts) that leave its account
+// or key out — by AllowsAccount, a gateway key's rule; "" for none.
+func groupHeld(c candidate, gs []provider.Group) string {
+	for _, g := range gs {
+		if len(g.Accounts) > 0 && !(access.Identity{Accounts: g.Accounts}).AllowsAccount(c.p.ID, c.p.AccountID()) {
+			return cmp.Or(g.Name, g.ID)
+		}
+	}
+	return ""
+}
+
+// allowedKey is p sent on the first of its keys in use the calling key
+// may use (#905), for the paths that send on one key of the provider
+// rather than over its candidates — a Grok or Volcengine video, which is
+// asked after on the first key again — in place of the first, which may
+// be one the key may not: a key held to a later one is sent on it, and
+// refused only when it may use none. A provider of an account keeps its
+// one account, checked as it is; one with no account and no key (a local
+// ollama) has nothing to hold. A key's own list of models (#474) is not
+// weighed here; the paths that can go over the keys do (onKeys, a
+// drawing's, the decision path's).
+func allowedKey(who access.Identity, p provider.Provider, model string) (provider.Provider, bool) {
+	if p.Key == "" {
+		return p, p.Account == nil || accountAllowed(who, candidate{p: p, model: model})
+	}
+	for _, k := range p.KeysOn() {
+		if q := p.WithKey(k); accountAllowed(who, candidate{p: q, model: model}) {
+			return q, true
+		}
+	}
+	return p, false
+}
+
+// onKeys is the keys or accounts of p a request for model that isn't a
+// chat goes over (a drawing, a video, an embedding), as a chat's go over
+// them (#1657): in its routing's order, a key or account whose own list
+// of models (#474) leaves the model out never, one the vendor lists the
+// model to another only after those that list it, and those the calling
+// key may not use (#905) left out. p's fallback models are not among
+// them. With none left it gives the status and what the caller is told:
+// 403 when every one is set not to serve the model, or is one the calling
+// key may not use. A provider with no key and no account (a local ollama)
+// is itself.
+func (s *Server) onKeys(r *http.Request, p provider.Provider, model, asked string) ([]candidate, int, string) {
+	if p.Account == nil && p.Key == "" {
+		return []candidate{{p: p, model: model, rest: p.ID}}, 0, ""
+	}
+	q := p
+	q.Fallback = nil
+	cs, pl := s.plan(q, model, provider.Chat)
+	if len(cs) == 0 && len(pl.left) > 0 && !slices.ContainsFunc(pl.left, func(w Weighed) bool { return !w.Barred }) {
+		return nil, http.StatusForbidden, barredError(asked, pl.left)
+	}
+	if keyWho, held := accountHolds(r); held {
+		cs = slices.DeleteFunc(cs, func(c candidate) bool { return !accountAllowed(keyWho, c) })
+		if len(cs) == 0 {
+			return nil, http.StatusForbidden, keyAccountsError(keyWho, asked)
+		}
+	}
+	if len(cs) == 0 {
+		cs = []candidate{{p: p, model: model, rest: p.ID}}
+	}
+	return cs, 0, ""
+}
+
+// keyModelError is what a request for a model its key may not use is told.
+func keyModelError(who access.Identity, model string) string {
+	return fmt.Sprintf("The gateway key %q may not use %s; it may use %s. Change the key's models in magpie's Gateway page, or use a model it has.",
+		who.KeyName, model, strings.Join(who.Models, ", "))
+}
+
+// keyAccountsError is what a request every candidate of which was an
+// account or key its key may not use is told — or its routing group,
+// held to some accounts (who.Group).
+func keyAccountsError(who access.Identity, model string) string {
+	if who.Group != "" {
+		msg := fmt.Sprintf("The routing group %q is held to some accounts, and none of the accounts or keys behind %s is one of them; it may use %s. Change the group's accounts in magpie's Routing page",
+			who.Group, model, keyAccountNames(who))
+		if who.KeyName != "" {
+			msg += fmt.Sprintf(" (and the gateway key %q's in its Gateway page)", who.KeyName)
+		}
+		return msg + ", or use an account it has."
+	}
+	return fmt.Sprintf("The gateway key %q is not allowed to use the accounts behind %s: no account or key behind it is one the key may use; it may use %s. Change the key's accounts in magpie's Gateway page, or use an account it has.",
+		who.KeyName, model, keyAccountNames(who))
+}
+
+// groupsHeldError is what a request is told when every account or key
+// left was one a routing group it went through — a group in the group, a
+// group a fallback reached — is held away from (Weighed.HeldBy).
+func groupsHeldError(model string, left []Weighed) string {
+	var by []string
+	for _, w := range left {
+		if w.HeldBy != "" && !slices.Contains(by, w.HeldBy) {
+			by = append(by, w.HeldBy)
+		}
+	}
+	return fmt.Sprintf("Every account or key behind %s is one the routing group %s is held away from: it is held to other accounts. Change the group's accounts in magpie's Routing page, or use an account it has.",
+		model, strings.Join(by, ", "))
+}
+
+// keyAccountNames is the key's accounts as an error message shows them:
+// named as the accounts list names them, "<provider>/<user>" where a
+// provider has the account now, the id alone otherwise.
+func keyAccountNames(who access.Identity) string {
+	names := provider.AccountNames()
+	accounts := who.ShownAccounts()
+	if len(accounts) == 0 {
+		return "none"
+	}
+	shown := make([]string, len(accounts))
+	for i, a := range accounts {
+		if n, ok := names[a]; ok {
+			shown[i] = n
+		} else {
+			shown[i] = a
+		}
+	}
+	return strings.Join(shown, ", ")
+}
+
+// countHeld answers the 403 a gateway key held to some models (#882) gets
+// for counting tokens on one it may not use, as it would be refused
+// serving it: Anthropic's count_tokens and Gemini's :countTokens, id the
+// model as each asks it, resolved — a bare group's name, an auto group's
+// stand-in — and a group judged as a request to it is (groupAllowed).
+// proto is the API the error is answered on.
+func countHeld(w http.ResponseWriter, r *http.Request, proto provider.Protocol, id string) bool {
+	keyWho, held := keyHolds(r)
+	if !held {
+		return false
+	}
+	if gid, ok := keyGroupFor(r, id); ok {
+		id = gid
+	}
+	if sid, ok := provider.AutoStandIn(id); ok {
+		id = sid
+	}
+	p, model, ok := provider.Resolve(id)
+	if !ok {
+		return false // counted nowhere: a local estimate, as before
+	}
+	g, ms, isGroup := provider.FindGroup(id)
+	if isGroup && !groupAllowed(keyWho, g, ms) || !isGroup && !modelAllowed(keyWho, p, model) {
+		writeError(w, proto, http.StatusForbidden, keyModelError(keyWho, id))
+		return true
+	}
+	return false
+}

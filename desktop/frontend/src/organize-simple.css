@@ -1,0 +1,136 @@
+/* REQ-EASY-01: one task per screen, using the adopted daisyUI theme and controls. */
+.side { width: 196px; flex: 0 0 196px; overflow-y: auto; }
+.side > * { flex-shrink: 0; }
+.side a { display: flex; align-items: center; min-height: 40px; white-space: nowrap; }
+.side-tools { margin-top: 16px; color: var(--sub); }
+.side-tools > summary { padding: 11px 12px; cursor: pointer; font-size: 13px; white-space: nowrap; --wails-draggable: no-drag; }
+.side-tools > a { margin-left: 12px; }
+.side .side-settings { margin-top: auto; }
+.side .side-foot { margin-top: 12px; }
+.organize-view { background: var(--surface); }
+.organizer-simple { max-width: 840px; padding-bottom: 0; }
+.organizer-simple [hidden] { display: none; }
+.organize-steps { display: flex; list-style: none; gap: 30px; padding: 0; margin: 2px 0 30px; color: var(--sub); font-size: 13px; }
+.organize-steps li[aria-current] { color: var(--accent); font-weight: 650; }
+.organize-heading { margin-bottom: 28px; }
+.organize-heading h1 { font-size: 26px; line-height: 1.4; letter-spacing: -.4px; }
+.organize-heading p { font-size: 14px; color: var(--sub); margin: 9px 0 0; }
+.organizer-simple label:not(.organize-file-name), .organize-source-head > span { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+.organizer-simple .input, .organizer-simple .select { height: 42px; min-height: 42px; padding-inline: 12px; font-size: 14px; }
+.organizer-simple .organize-file-table .select { height: 36px; min-height: 36px; font-size: 13px; }
+.organize-project-pick { margin-bottom: 22px; }
+.organize-source-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 8px; }
+.organize-source-head > span { margin: 0; }
+.organize-source-list { margin: 0; padding: 0; list-style: none; max-height: 240px; overflow: auto; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.organize-source-list li { display: flex; align-items: center; gap: 12px; padding: 14px 2px; }
+.organize-source-list li + li { border-top: 1px solid var(--line); }
+.organize-source-list li > div { flex: 1; min-width: 0; }
+.organize-source-list strong { font-size: 14px; font-weight: 550; overflow-wrap: anywhere; }
+.organize-source-path { display: block; margin-top: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; }
+.organize-source-list .organize-empty { min-height: 100px; color: var(--sub); font-size: 14px; justify-content: center; text-align: center; }
+.organizer-simple details { border: 0; margin-top: 0; padding-top: 0; }
+.organizer-simple summary { color: var(--sub); font-size: 13px; font-weight: 500; padding: 8px 0; }
+.organize-source-tools { margin-top: 12px; }
+.organize-source-tools textarea { width: 100%; }
+.organizer-simple .organize-step-actions { position: sticky; bottom: -1px; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 0 12px; margin-top: 18px; background: var(--surface); border-top: 1px solid var(--line); z-index: 2; }
+.organize-step-actions > div, .organize-result-actions { display: flex; align-items: center; gap: 8px; }
+.organize-step-actions .sub { font-size: 12px; }
+.organize-name-field { margin-bottom: 22px; }
+#organize-settings > .select { width: 100%; }
+.organize-folder-summary { margin: 22px 0; padding: 18px 20px; background: var(--color-base-200); border-radius: var(--radius-field); }
+.organize-folder-summary p { margin: 0 0 12px; font-size: 13px; color: var(--sub); }
+.organize-folder-summary ul { display: flex; flex-wrap: wrap; gap: 10px 22px; padding: 0; margin: 0; list-style: none; font-size: 14px; }
+.organize-folder-summary li::before { content: '↳'; margin-right: 7px; color: var(--sub); }
+#organize-customize { padding: 8px 0; }
+#organize-customize > summary { color: var(--text); }
+#organize-customize[open] > summary { margin-bottom: 16px; }
+.organizer-simple .organize-directory, .organizer-simple .organize-directory-head { grid-template-columns: minmax(140px,1fr) minmax(160px,1fr) 60px; }
+.organizer-simple .organize-directory .input, .organizer-simple .organize-directory .select { min-height: 36px; height: 36px; font-size: 13px; }
+.organizer-simple .organize-rule { grid-template-columns: 16px 110px minmax(70px,1fr) 26px minmax(85px,1fr) 32px 48px; gap: 6px; }
+.organize-destination { display: flex; gap: 16px; align-items: baseline; padding: 2px 0 10px; flex-wrap: wrap; }
+.organize-destination strong { font-size: 16px; }
+.organizer-simple #organize-preview-area .organize-file-table th:first-child { width: 61%; }
+.organizer-simple #organize-preview-area .organize-file-table th:nth-child(2) { width: 39%; }
+.organizer-simple .organize-file-table.table :where(th,td) { padding: 13px 16px; }
+.organizer-simple .organize-file-name { align-items: center; line-height: 1.5; margin: 0; }
+.organizer-simple .organize-file-name strong { font-weight: 550; overflow-wrap: anywhere; }
+.organizer-simple .organize-file-detail { margin: 4px 0 0 26px; }
+.organize-file-detail summary { font-size: 12px; padding: 3px 0; }
+.organize-file-detail p { font-size: 12px; margin: 6px 0; }
+.organize-review-note { display: block; margin: 5px 0 0 26px; color: var(--sub); font-size: 12px; }
+.organize-status { min-height: 20px; font-size: 13px; margin: 10px 0; color: var(--text); }
+.organize-done { margin: 32px 0 24px; }
+.organize-done strong { font-size: 20px; }
+.organize-done p { font-size: 16px; }
+.organize-result-actions { margin: 24px 0; }
+.modal-box h2 { margin: 0 0 16px; font-size: 18px; }
+.structure-summary { display: flex; flex-wrap: wrap; gap: 10px 24px; color: var(--sub); font-size: 13px; margin: 0 0 16px; }
+.structure-summary span:first-child { color: var(--text); }
+.structure-workspace { display: grid; grid-template-columns: 220px minmax(0,1fr); height: clamp(240px,calc(100vh - 325px),600px); border: 1px solid var(--line); border-radius: var(--radius-box); overflow: hidden; }
+.structure-tree { padding: 14px 10px; background: var(--color-base-200); border-right: 1px solid var(--line); overflow: auto; }
+.structure-tree ul { list-style: none; padding: 0; margin: 3px 0 20px 12px; }
+.structure-tree li { padding-left: calc(var(--folder-depth) * 14px); }
+.structure-tree button { display: flex; width: 100%; align-items: center; gap: 9px; border: 0; padding: 10px 9px; color: var(--text); background: transparent; border-radius: var(--radius-field); text-align: left; font: inherit; font-size: 13px; cursor: pointer; }
+.structure-tree button > span:not(.folder-shape) { min-width: 0; flex: 1; overflow-wrap: anywhere; }
+.structure-tree button:hover { background: var(--hover); }
+.structure-tree button[aria-current] { background: var(--surface); box-shadow: 0 1px 3px color-mix(in srgb,var(--text) 8%,transparent); color: var(--accent); font-weight: 600; }
+.structure-tree small { font-size: 12px; color: var(--sub); font-variant-numeric: tabular-nums; }
+.structure-root { font-weight: 650; }
+.structure-other { border-top: 1px solid var(--line); padding-top: 12px; }
+.folder-shape { display: inline-block; flex-shrink: 0; width: 16px; height: 11px; border: 1.5px solid currentColor; border-radius: 2px; position: relative; color: var(--sub); }
+.folder-shape::before { content: ''; position: absolute; left: -1.5px; top: -5px; width: 7px; height: 4px; border: 1.5px solid currentColor; border-bottom: 0; border-radius: 2px 2px 0 0; }
+.structure-content { min-width: 0; min-height: 0; display: flex; flex-direction: column; background: var(--surface); }
+.structure-content-head { padding: 18px 22px 12px; border-bottom: 1px solid var(--line); }
+.structure-breadcrumb { color: var(--sub); font-size: 12px; margin-bottom: 10px; overflow-wrap: anywhere; }
+.organizer-simple .structure-content h2 { font-size: 17px; margin: 0; line-height: 1.4; }
+.structure-content h2 small { color: var(--sub); font-size: 12px; font-weight: 400; margin-left: 8px; }
+.structure-content-head p { font-size: 12px; color: var(--sub); line-height: 1.6; margin: 7px 0 0; }
+.structure-scroll { min-height: 0; overflow: auto; flex: 1; overscroll-behavior: contain; }
+.structure-folders, .structure-files { list-style: none; padding: 0; margin: 0; }
+.structure-folders li + li, .structure-files li + li { border-top: 1px solid var(--line); }
+.structure-folders button { display: flex; align-items: center; gap: 14px; width: 100%; padding: 16px 24px; border: 0; background: transparent; color: var(--text); text-align: left; cursor: pointer; font: inherit; }
+.structure-folders button:hover { background: var(--hover); }
+.structure-folders button > span:nth-child(2) { flex: 1; min-width: 0; }
+.structure-folders strong { font-weight: 550; font-size: 14px; display: block; overflow-wrap: anywhere; }
+.structure-folders small { display: block; font-size: 12px; color: var(--sub); margin-top: 5px; }
+.structure-folder-arrow { color: var(--sub); }
+.structure-tree mdui-button, .structure-folders mdui-button { display: block; width: 100%; height: auto; white-space: normal; text-align: left; }
+.structure-tree mdui-button { min-height: 40px; border-radius: var(--radius-field); }
+.structure-tree mdui-button::part(button) { padding: 10px 9px; justify-content: flex-start; }
+.structure-tree mdui-button::part(label), .structure-folders mdui-button::part(label) { display: flex; align-items: center; width: 100%; gap: 9px; text-align: left; }
+.structure-tree mdui-button > span:not(.folder-shape) { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.structure-tree mdui-button[aria-current] { background: var(--surface); box-shadow: 0 1px 3px color-mix(in srgb,var(--text) 8%,transparent); font-weight: 600; }
+.structure-folders mdui-button { min-height: 76px; }
+.structure-folders mdui-button::part(button) { padding: 16px 24px; justify-content: flex-start; }
+.structure-folders mdui-button::part(label) { gap: 14px; }
+.structure-folders mdui-button > span:nth-child(2) { flex: 1; min-width: 0; }
+.structure-filter { display: block; padding: 10px 20px; margin: 0; }
+.structure-filter .input { width: 100%; height: 34px; min-height: 34px; font-size: 13px; }
+.structure-filter .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.structure-files > li { padding: 13px 20px; }
+.structure-file-line { display: flex; align-items: center; gap: 10px; }
+.structure-file-kind { width: 30px; min-width: 30px; color: var(--sub); font-size: 10px; text-align: center; padding-block: 9px; border: 1px solid var(--line); border-radius: 3px; }
+.structure-file-name { flex: 1; min-width: 0; }
+.structure-file-name strong { font-size: 13px; font-weight: 550; display: block; overflow-wrap: anywhere; }
+.structure-file-name > span { display: block; font-size: 12px; color: var(--sub); margin-top: 4px; }
+.structure-copy { color: var(--sub); font-size: 11px; }
+.organizer-simple .structure-file-detail { margin-left: 30px; margin-top: 6px; }
+.structure-file-detail summary { font-size: 12px; padding: 2px 0; }
+.structure-file-detail dl { font-size: 12px; line-height: 1.6; }
+.structure-file-detail dt { color: var(--sub); margin-top: 10px; }
+.structure-file-detail dd { margin: 2px 0 0; overflow-wrap: anywhere; }
+.structure-file-detail .select { width: 100%; min-height: 34px; height: 34px; font-size: 13px; }
+.structure-no-files { padding: 24px; color: var(--sub); font-size: 13px; }
+.structure-groups { list-style: none; padding: 0; margin: 0; }
+.structure-groups > li { padding: 20px 24px; border-bottom: 1px solid var(--line); }
+.structure-groups h3 { font-size: 15px; margin: 0 0 8px; }
+.structure-groups p { font-size: 13px; color: var(--sub); margin: 6px 0; }
+.structure-group-examples { overflow-wrap: anywhere; }
+.structure-groups label { display: block; margin-top: 16px; font-size: 12px; }
+.structure-groups .select { width: 100%; margin-top: 6px; }
+.structure-group-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.structure-more { padding: 16px 24px; font-size: 12px; color: var(--sub); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.organizer-simple .structure-save-path { margin-top: 10px; }
+.organizer-simple #organize-preview-area .organize-step-actions { position: static; margin-top: 6px; padding-top: 14px; }
+@media(max-width: 960px) { .structure-workspace { grid-template-columns: 175px minmax(0,1fr); } .structure-tree { padding-inline: 6px; } .structure-tree ul { margin-left: 3px; } .structure-content-head { padding-inline: 16px; } .structure-folders button, .structure-files > li { padding-inline: 16px; } }
+@media(max-width: 960px) { .side { width: 176px; flex-basis: 176px; } .organize-heading h1 { font-size: 23px; } .organize-steps { margin-bottom: 24px; } .organize-heading { margin-bottom: 24px; } }

@@ -1,0 +1,113 @@
+{
+  "date": "2026-11-09",
+  "agent": "codex",
+  "purpose": "WorkShelf private authorization; fixed bounded probes and helper-lifetime recipient proof; exact selected account generation, final URL and wire-model binding; no fallback, replay or redirect",
+  "importLedger": "WORKSHELF-IMPORT.json",
+  "modified": [
+    {
+      "file": "cmd/workshelf-core/main.go",
+      "importSHA256": "0fe61dd400077bcfe5bf71f8a7648f4614eb50aef7cf2c6011a9e09c65e299bb",
+      "currentSHA256": "d1cf2d506afa7d45f4e7152a1254cf69b38afb16cb0082b40ada4123849fd36f"
+    },
+    {
+      "file": "cmd/workshelf-core/main_test.go",
+      "importSHA256": "8b6a5a7769340f876478e73c730f9373bb69bfd939cc67d560f9d14a7835128d",
+      "currentSHA256": "86da75db7a8942730073f7c396d39cab336737dafbdc68a031e7c0478fdc1fae"
+    },
+    {
+      "file": "internal/gateway/gateway.go",
+      "importSHA256": "f6bc70457f049868559290cba3522a50227a3661f3c7eb8f6223bcd44d1bdb6e",
+      "currentSHA256": "b8b74212df1fa3b284eae7205b6edf1e5e4e824c4eaf8834fe6d9ae43ca02d8c"
+    },
+    {
+      "file": "internal/provider/account.go",
+      "importSHA256": "af6cbcd66e560835df4121b61d8b4c9e602fb4dea89e36eb6a61390170af55b4",
+      "currentSHA256": "3ebad9da029dfd00b80df51f727e198d3427ded7cf5c7f914d1a21eba8b9bef8"
+    },
+    {
+      "file": "internal/provider/logins.go",
+      "importSHA256": "ec7196912ad3e6ddea241909770f532443b19805c97444a006bd877a686e3466",
+      "currentSHA256": "a4cbb06449a1b8d88c73aabf9a0f16f88afeaa5fed6c032520b9f3be2325bed8"
+    },
+    {
+      "file": "internal/provider/uxqa.go",
+      "importSHA256": "e27f0fe18a808356b173001f56f989f8e5f2bfce83bbc1aa55da3e21a54200d1",
+      "currentSHA256": "e37f856ed6f5ca0c8c78e8468f43b5a3f81aac9c58977b41dbc6896416e6ef5e"
+    },
+    {
+      "file": "internal/steady/steady.go",
+      "importSHA256": "7514a8c7d2a22766e67a4802c6b1f56e364206c86fcf72c3774bea557ad3ee8e",
+      "currentSHA256": "a70880d18126a345bee500a7e236c3d5e8eadc27ede53a2569c532501131217b"
+    }
+  ],
+  "added": [
+    {
+      "file": "internal/appdir/workshelf_fifo_test.go",
+      "sha256": "95e69a459b59d1c63dd652988a883953cf04f5c92e15e100d77c976aea446438"
+    },
+    {
+      "file": "internal/appdir/workshelf_open_other.go",
+      "sha256": "44c040261fbb315e072b881e6c83e9e8d571b6cf641e78ef55e3d623396a7b70"
+    },
+    {
+      "file": "internal/appdir/workshelf_open_unix.go",
+      "sha256": "cbe119a2e6913b9e0383a07861387653a205c2c5a9919be5815c8ba67749b6b5"
+    },
+    {
+      "file": "internal/appdir/workshelf_write.go",
+      "sha256": "a86920e46a219b5874bd626347657ce71ba53d342c4ca279206458d68c77fb5d"
+    },
+    {
+      "file": "internal/appdir/workshelf_write_test.go",
+      "sha256": "2b788c1f7ba34e8e5fd0923621ac9cb962669a2dc4acdf2d205eae9d3dd6dc96"
+    },
+    {
+      "file": "internal/gateway/workshelf_generation.go",
+      "sha256": "1062c5f2e9a8c0647d0be6f01a28f44ec2ac8df081928105090fdd41c1f63507"
+    },
+    {
+      "file": "internal/gateway/workshelf_generation_h2_test.go",
+      "sha256": "a356edefacc1b9aa155732208e4be592f225a19b46921e68e5763437d18724a5"
+    },
+    {
+      "file": "internal/gateway/workshelf_generation_test.go",
+      "sha256": "0b88c7e3f834efe80511cc8e642a1476858cd2f8dc837c3c771a6c5d3bbf4eaf"
+    },
+    {
+      "file": "internal/gateway/workshelf_probe_tls_test.go",
+      "sha256": "c4dd33e9bdc18f050692df51a47e5f42da2863023c41d2c53bc25cecfaac70c1"
+    },
+    {
+      "file": "internal/gateway/workshelf_recipient.go",
+      "sha256": "3344da1e3cd9f183ebc0c0e1341abff859e349009eee0ae13ddbd6ab1cf19488"
+    },
+    {
+      "file": "internal/gateway/workshelf_recipient_test.go",
+      "sha256": "637515b44e8a1d323b205b0660d0bd4a56603b3f027b79c3d5d55d83906cf046"
+    },
+    {
+      "file": "internal/provider/workshelf_claude_remove.go",
+      "sha256": "ff609c3a422e43c01c6fc8c2f3a9682fd89096ca60ed0f9f83487653ece9341e"
+    },
+    {
+      "file": "internal/provider/workshelf_generation.go",
+      "sha256": "a632bfcebbb1feb639517d70680073673816104b50384ad727f8aa18a87c4fb5"
+    },
+    {
+      "file": "internal/provider/workshelf_generation_test.go",
+      "sha256": "1c5dbce69fbb63e8376dd187c7c790f6327ad02d4c7e44b220fb84258c710d14"
+    },
+    {
+      "file": "internal/provider/workshelf_recipient.go",
+      "sha256": "f40771f163d0243e72cade5a9bad90f5b82a0c9e3122632192b97c4be3629fc7"
+    },
+    {
+      "file": "internal/provider/workshelf_recipient_test.go",
+      "sha256": "e401c6b5598d8954656c829fec8fced5486524e0482f593d143e00c82eded3e3"
+    },
+    {
+      "file": "internal/provider/workshelf_security_test.go",
+      "sha256": "18cad4e55754791de854a1b241216529c7e72fdfb80d64a9ac0685657358cc64"
+    }
+  ]
+}

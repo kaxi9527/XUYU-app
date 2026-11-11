@@ -1,0 +1,30 @@
+.et-source_record { --edge: var(--accent); }
+.et-memory_event { --e: var(--accent); }
+.et-memory_member { --e: var(--sub); }
+.graph-edge.et-memory_event { stroke: var(--accent); }
+.graph-edge.et-memory_member { stroke: var(--sub); stroke-dasharray: 4 5; }
+.graph-node.k-memory_event .dot { fill: var(--accent); }
+.graph-edge.et-source_record { stroke: var(--accent); stroke-dasharray: 5 4; }
+.sw.et-source_record { background: var(--accent); }
+.graph-node.k-agent rect { stroke: var(--accent); stroke-dasharray: 5 3; }
+.graph-source-status { margin: 12px 0; padding: 10px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.graph-source-status p { overflow-wrap: anywhere; }
+.graph-field { display: flex; align-items: center; gap: 8px; flex: 1 1 260px; min-width: 0; max-width: 380px; }
+.graph-field label { white-space: nowrap; }
+.graph-field .graph-filter,.graph-field .graph-select { width: 100%; max-width: none; min-width: 0; flex: 1; }
+.graph-detail:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+.graph-edge.et-exported_from { stroke: var(--accent); }
+.graph-edge.et-work_version { stroke: var(--sub); stroke-dasharray: 4 5; }
+.et-exported_from { --e: var(--accent); }
+.et-work_version { --e: var(--sub); }
+.sw.et-work_version { border-top-style: dashed; }
+.graph-node.k-work .dot { fill: var(--accent); }
+.graph-node rect.graph-hit-area { fill: transparent; stroke: none; }
+.graph-work-page { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; width: 100%; }
+.graph-work-page span { overflow-wrap: anywhere; flex: 1 1 200px; }
+.graph-work-row { display: grid; grid-template-columns: minmax(140px,1fr) 90px minmax(160px,1fr); width: 100%; gap: 12px; text-align: left; background: transparent; color: inherit; border: 0; border-bottom: 1px solid var(--line); padding: 14px 10px; cursor: pointer; font: inherit; }
+.graph-work-row strong,.graph-work-row span { overflow-wrap: anywhere; }
+.graph-work-row:hover { background: var(--hover); }
+.graph-work-row:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+.rel-cols[hidden] { display: none; }
+@media (max-width: 700px) { .graph-work-row { grid-template-columns: minmax(0,1fr) 90px; } .graph-work-row span:last-child { grid-column: 1 / -1; } }

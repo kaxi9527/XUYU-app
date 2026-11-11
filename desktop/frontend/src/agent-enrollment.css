@@ -1,0 +1,35 @@
+.agent-screen { max-width: 960px; margin: 0 auto; }
+.agent-intro { margin: 0 0 24px; color: var(--sub); line-height: 1.6; }
+.agent-feedback { margin: 0 0 14px; overflow-wrap: anywhere; line-height: 1.6; }
+.agent-feedback:empty { display: none; }
+.agent-setting { display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 20px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.agent-setting label { font-weight: 600; font-size: 16px; cursor: pointer; }
+.agent-setting .toggle { flex-shrink: 0; }
+.agent-screen .sub { color: var(--sub); font-size: 13px; line-height: 1.6; margin: 6px 0 0; }
+.agent-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin: 30px 0 8px; }
+.agent-toolbar h2 { font-size: 18px; line-height: 1.5; margin: 0; }
+.agent-list { list-style: none; margin: 0; padding: 0; }
+.agent-row { display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 20px 0; border-bottom: 1px solid var(--line); }
+.agent-identity { min-width: 0; }
+.agent-row h3 { font-size: 16px; line-height: 1.5; margin: 0; overflow-wrap: anywhere; }
+.agent-state { margin: 5px 0; font-size: 14px; }
+.agent-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; flex-wrap: wrap; }
+.agent-screen summary,.agent-rule summary { cursor: pointer; min-height: 32px; line-height: 32px; font-size: 13px; overflow-wrap: anywhere; }
+.agent-screen details { margin-top: 6px; }
+.agent-path { font-size: 13px; color: var(--sub); line-height: 1.6; overflow-wrap: anywhere; margin: 6px 0; }
+.agent-details { padding: 12px 0; border-bottom: 1px solid var(--line); }
+.agent-evidence { padding: 8px 0; }
+.agent-empty { padding: 32px 0; }
+.agent-empty h3 { font-size: 16px; margin: 0 0 8px; }
+.agent-empty p,.agent-footnote { color: var(--sub); font-size: 13px; line-height: 1.7; }
+.agent-footnote { margin: 24px 0; }
+.agent-notice { border-left: 3px solid var(--accent); padding: 8px 12px; font-size: 14px; line-height: 1.6; overflow-wrap: anywhere; }
+.agent-rule pre { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 40vh; overflow-y: auto; font-size: 13px; line-height: 1.6; }
+@media (max-width: 720px) {
+  .agent-row { align-items: flex-start; flex-direction: column; gap: 8px; }
+  .agent-actions { gap: 4px; }
+}
+.agent-identity h3 {display:flex;gap:9px;align-items:center}
+.brand-directory {margin-top:24px;border-top:1px solid var(--line);padding-top:18px;font-size:13px}
+.brand-list {display:flex;flex-wrap:wrap;gap:14px 22px;margin:18px 0}
+.brand-list .agent {gap:7px;min-width:112px}

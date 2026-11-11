@@ -1,0 +1,9 @@
+/workshelf
+/dist/
+*.test
+*.out
+.DS_Store
+.workshelf-origin.jsonl
+.env
+.env.*
+!.env.example

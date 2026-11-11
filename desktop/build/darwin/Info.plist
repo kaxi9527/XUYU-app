@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+		<key>CFBundleExecutable</key>
+		<string>WorkShelf</string>
+		<key>CFBundleGetInfoString</key>
+		<string>WorkShelf desktop</string>
+		<key>CFBundleIconFile</key>
+		<string>icons</string>
+		<key>CFBundleIconName</key>
+		<string>appicon</string>
+		<key>CFBundleIdentifier</key>
+		<string>com.kaxi9527.workshelf</string>
+		<key>CFBundleName</key>
+		<string>WorkShelf</string>
+		<key>CFBundlePackageType</key>
+		<string>APPL</string>
+		<key>CFBundleShortVersionString</key>
+		<string>0.9.8</string>
+		<key>CFBundleVersion</key>
+		<string>20261106.10</string>
+		<key>LSMinimumSystemVersion</key>
+		<string>12.0.0</string>
+		<key>NSHighResolutionCapable</key>
+		<string>true</string>
+		<key>NSHumanReadableCopyright</key>
+		<string>(c) 2026, kaxi9527</string>
+		<key>NSDesktopFolderUsageDescription</key>
+		<string>WorkShelf 要看桌面上有哪些项目和文件，好帮你整理进总文件夹。不会擅自删文件。</string>
+		<key>NSDocumentsFolderUsageDescription</key>
+		<string>WorkShelf 要看文稿里的项目，识别还在原处的文件夹，方便一键归位。不会擅自删文件。</string>
+		<key>NSDownloadsFolderUsageDescription</key>
+		<string>WorkShelf 要看下载里散落的文件和压缩包，帮你对上所属项目。不会擅自删文件。</string>
+		<key>NSFileProviderPresenceUsageDescription</key>
+		<string>WorkShelf 需要知道文件是否在本机，避免整理时漏掉或搞错。</string>
+	</dict>
+</plist>
