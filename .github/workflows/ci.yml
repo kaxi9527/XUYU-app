@@ -46,6 +46,10 @@ jobs:
         run: npm ci && npm run typecheck && npm run test:ui && npm run build
       - name: Test file moves
         run: go test -p 1 -count=1 -run 'TestExclusiveMoveNeverClobbers|TestExactJournalFailureDoesNotMove|TestExactPublishesUndoBeforeMoving' ./internal/home
+      - name: Test Linux single-instance identifier
+        if: matrix.platform == 'linux'
+        working-directory: desktop
+        run: go test -p 1 -count=1 -run TestBackgroundInstanceIDIsValidDBusName .
       - name: Build desktop and model runtime
         shell: bash
         env:

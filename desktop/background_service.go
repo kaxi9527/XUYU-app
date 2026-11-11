@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 	"sync"
 
 	"github.com/kaxi9527/WorkShelf/internal/config"
@@ -175,5 +176,8 @@ func backgroundInstanceID() string {
 		return backgroundLabel
 	}
 	sum := sha256.Sum256([]byte(filepath.Clean(f.config)))
+	if runtime.GOOS == "linux" {
+		return fmt.Sprintf("%s.i%x", backgroundLabel, sum[:12])
+	}
 	return fmt.Sprintf("%s.%x", backgroundLabel, sum[:12])
 }
