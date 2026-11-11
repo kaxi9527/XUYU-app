@@ -40,9 +40,10 @@ func main() {
 		services = append(services, application.NewService(notifier))
 	}
 	app := application.New(application.Options{
-		Name:        "序屿 XUYU",
-		Description: "序屿：归拢项目文件，按工种模板与自己的规则整理",
-		OnShutdown:  shutdown,
+		Name:         "序屿 XUYU",
+		Description:  "序屿：归拢项目文件，按工种模板与自己的规则整理",
+		ErrorHandler: func(err error) { log.Print(err) },
+		OnShutdown:   shutdown,
 		SingleInstance: &application.SingleInstanceOptions{UniqueID: backgroundInstanceID(), OnSecondInstanceLaunch: func(application.SecondInstanceData) {
 			if window != nil {
 				window.Show()
