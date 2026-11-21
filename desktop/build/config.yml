@@ -11,7 +11,7 @@ info:
   description: "序屿 文件归位与 AI 动态" # The application description
   copyright: "(c) 2026, kaxi9527" # Copyright text
   comments: "WorkShelf desktop" # Comments
-  version: "0.9.8" # The application version
+  version: "0.9.9" # The application version
   # cfBundleIconName: "appicon" # The macOS icon name in Assets.car icon bundles (optional)
   #                               # Should match the name of your .icon file without the extension
   #                               # If not set and Assets.car exists, defaults to "appicon"

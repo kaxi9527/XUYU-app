@@ -1,0 +1,84 @@
+.dg {
+  max-width: 1080px;
+}
+.dg-space {
+  margin: 18px 0 8px;
+  color: var(--sub);
+}
+.dg-space strong {
+  margin-left: 8px;
+  color: var(--text);
+  font-size: 24px;
+}
+.dg-controls,
+.dg-settings form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+}
+.dg label {
+  font-size: 13px;
+}
+.dg input,
+.dg select {
+  max-width: 100%;
+  padding: 5px;
+  color: inherit;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+}
+.dg table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.dg th,
+.dg td {
+  padding: 9px 8px;
+  text-align: right;
+  border-bottom: 1px solid var(--line);
+  font-variant-numeric: tabular-nums;
+}
+.dg th:first-child,
+.dg td:first-child {
+  text-align: left;
+  width: 50%;
+  overflow-wrap: anywhere;
+}
+.dg button[data-category],
+.dg button[data-more] {
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  text-align: left;
+}
+.dg .dg-dir {
+  font-size: 13px;
+  background: var(--surface);
+}
+.dg .dg-dir td:first-child {
+  padding-left: 25px;
+}
+.dg small {
+  display: block;
+  color: var(--sub);
+}
+.dg details {
+  margin: 18px 0;
+}
+.dg details li {
+  overflow-wrap: anywhere;
+}
+.dg details summary {
+  cursor: pointer;
+}
+.dg-home {
+  display: block;
+  margin: 0 0 16px;
+  font-size: 13px;
+  color: var(--sub);
+}
