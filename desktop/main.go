@@ -19,11 +19,21 @@ var assets embed.FS
 
 func main() {
 	svc := &ShelfService{}
+	if len(os.Args) == 2 {
+		switch os.Args[1] {
+		case "--enable-disk-growth", "--disk-growth-daily", "--disk-growth-sample":
+			if err := svc.runGrowthCommand(os.Args[1]); err != nil {
+				log.Fatal(err)
+			}
+			return
+		}
+	}
 	background, _ := svc.BackgroundStatus()
 	var window *application.WebviewWindow
 	var shutdownOnce sync.Once
 	shutdown := func() {
 		shutdownOnce.Do(func() {
+			svc.closeGrowth()
 			svc.closeAutoOrganize()
 			svc.closePlacements()
 			svc.closeProjectMemoryObservation()
@@ -104,6 +114,7 @@ func main() {
 		autoRefreshRegistry(svc)
 	}
 	svc.startAgentDiscovery()
+	svc.startGrowth()
 	svc.startProjectMemoryObservation()
 	svc.startAutoOrganize()
 	err := app.Run()

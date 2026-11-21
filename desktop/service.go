@@ -14,10 +14,11 @@ import (
 )
 
 // Version 是桌面版版本号（发包时用 -ldflags 覆盖）。
-var Version = "0.9.8-local"
+var Version = "0.9.9-preview"
 
 // ShelfService 是前端调用的后端服务。只读的方法随便调；会改文件的方法都要前端先让人确认。
 type ShelfService struct {
+	growth       growthWorker
 	organizer    organizePlans
 	deletions    deletePlans
 	versions     versionPreviews

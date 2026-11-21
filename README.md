@@ -1,5 +1,7 @@
 # 序屿 XUYU（原 WorkShelf）
 
+「我的项目」首页显示磁盘剩余空间和最近两次采样时间。「更多工具 → 磁盘增长表」中可手动建立基线，或开启每日采样（默认本地 09:00），按 7–15 个本地日期保留历史（默认 14 天）。可选择历史记录、展开分类，并按项目名或路径查找增长和净减少。采样仅读取当前用户所在卷的文件系统元数据，汇总和读取限制保存在本机。硬链接只计一次，卷可用空间另由系统提供。
+
 把分散的项目文件归拢到清晰的项目目录，追踪文件变化，并按需要接入 AI 工具。桌面整理会搬迁文件，并保留可用于撤销的记录。
 
 [English](README.en.md) · [安装与更新 / Install & update](docs/INSTALL.md) · [更新说明 / Changelog](CHANGELOG.md) · [参与贡献 / Contributing](CONTRIBUTING.md) · [下载 / Releases](https://github.com/kaxi9527/XUYU-app/releases)

@@ -1,5 +1,7 @@
 # XUYU (formerly WorkShelf)
 
+The projects homepage shows available disk space and the two most recent sample times. Open More tools → Disk growth to take a baseline or enable daily sampling at a local time (default 09:00). The default retention is 14 local calendar days, adjustable from 7 to 15. Compare consecutive samples, expand categories, search project names or paths, and filter for decreases. Measurements read filesystem metadata on the home volume and store summaries and access gaps locally.
+
 XUYU brings scattered project files together, organizes them using editable work-type templates, and keeps a record of changes. Desktop organization moves files and records operations that can be undone. The current interface is primarily in Chinese.
 
 [中文](README.md) · [Installation and updates](docs/INSTALL.md) · [Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md) · [Downloads](https://github.com/kaxi9527/XUYU-app/releases)

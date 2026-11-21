@@ -8,6 +8,7 @@ import {mountProjectAnalysis} from './project-analysis';
 import {mountProjectAnalysisBatch} from './project-analysis-batch';
 import {mountProjectPlacement} from './project-placement';
 import {mountBackgroundSettings} from './background-settings';
+import {mountDiskGrowth, diskBytes, instant} from './disk-growth';
 import {mountAutoOrganize} from './auto-organize';
 import {hasStartChoice,mountWelcome,mountNewProject} from './welcome';
 import {accessWasChecked,checkAccess} from './access-status';
@@ -626,6 +627,13 @@ async function renderProjects() {
     const epoch=routeEpoch;
     view.innerHTML = `<header class="bar"><div><h1>我的项目</h1><p class="sub">文件跟着项目走，找起来更容易。</p></div><div class="actions"><mdui-button class="btn" variant="text" href="#/organize">整理旧项目</mdui-button><mdui-button class="page-primary btn btn-primary" variant="filled" href="#/new-project">新建项目</mdui-button></div></header><div id="grid" class="project-list">${loading()}</div>`;
     const grid = document.getElementById("grid")!;
+    const diskLink=document.createElement('a');
+    diskLink.className='dg-home';diskLink.href='#/disk-growth';diskLink.textContent='查看磁盘增长表';
+    grid.before(diskLink);
+    void call<{free:number; previous:string; current:string}>('DiskGrowthHeadline').then(d=>{
+        const times=[d.previous,d.current].filter(Boolean).map(instant);
+        diskLink.textContent='磁盘可用 '+diskBytes(d.free)+' · '+(times.length?times.join(' → '):'尚无采样')+' · 查看磁盘增长表';
+    }).catch(()=>{});
     try {
         let st = await call<RegStatus>("RegistryStatus");
         if ((!st.exists || Date.now()-Date.parse(st.generatedAt)>12*60*60*1000) && !st.running) {
@@ -2205,7 +2213,9 @@ let disposeAgents: (()=>void)|undefined;
 let disposeGraph: (()=>void)|undefined;
 let disposeNewProject: (()=>void)|undefined;
 let disposeModels: (()=>void)|undefined;
+let disposeGrowth: (()=>void)|undefined;
 export const routes: Record<string, (arg: string) => void | Promise<void>> = {
+    "disk-growth":()=>{disposeGrowth=mountDiskGrowth(view,call,esc);},
     "": () => hasStartChoice()?renderProjects():mountWelcome(view,call,esc),
     "welcome":()=>mountWelcome(view,call,esc),
     "new-project":()=>{disposeNewProject=mountNewProject(view,call,esc,(html,ok)=>confirmBox(html,ok));},
@@ -2227,6 +2237,7 @@ export const routes: Record<string, (arg: string) => void | Promise<void>> = {
 };
 
 function route() {
+    disposeGrowth?.();disposeGrowth=undefined;
     disposeAnalysis?.();disposeAnalysis=undefined;
     disposeModels?.();disposeModels=undefined;
     disposeNewProject?.();disposeNewProject=undefined;
